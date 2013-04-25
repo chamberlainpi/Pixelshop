@@ -42,6 +42,8 @@ package pixelshop.managers {
 		protected override function onNewDocument():void {
 			super.onNewDocument();
 			
+			if (!Registry.LAYER_DRAW) return;
+			
 			_selectionRect.setTo(0, 0, Registry.LAYER_DRAW.width, Registry.LAYER_DRAW.height); 
 		}
 		

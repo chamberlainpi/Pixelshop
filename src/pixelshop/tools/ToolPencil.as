@@ -1,6 +1,5 @@
 package pixelshop.tools {
 	import bigp.mathlib.DrawLib;
-	import bigp.mathlib.PixelBytes;
 	import com.bigp.Lib;
 	import com.bigp.utils.enums.Direction;
 	import flash.display.BitmapData;
@@ -49,8 +48,6 @@ package pixelshop.tools {
 			
 			_straight = false;
 			_straightSide = 0;
-			
-			Registry.LAYER_DRAW.clear();
 		}
 		
 		protected override function _createCommand():void {
@@ -58,6 +55,7 @@ package pixelshop.tools {
 			
 			var cmd:CommandDraw =	CommandDraw.create( Registry.LAYER_CURRENT.bitmap, Registry.LAYER_DRAW.bitmap );
 			
+			Registry.LAYER_DRAW.clear(false);
 			Registry.MAN_UNDO.add( cmd );
 		}
 		
@@ -71,7 +69,6 @@ package pixelshop.tools {
 				lastY = manager.currentY;
 				return;
 			}
-			
 			
 			var theX:int = manager.currentX;
 			var theY:int = manager.currentY;
@@ -95,6 +92,7 @@ package pixelshop.tools {
 			}
 			
 			Registry.DRAW_LIB.drawLine( lastX, lastY, theX, theY, manager.currentColor, 128 );
+			Registry.LAYER_DRAW.invalidate();
 			
 			lastX = theX;
 			lastY = theY;

@@ -17,6 +17,7 @@ package pixelshop.managers {
 	import pixelshop.tools.ToolPicker;
 	import pixelshop.tools.ToolSelect;
 	import pixelshop.tools.ToolShape;
+	import starling.display.Sprite;
 
 	/**
 	 * ...
@@ -56,15 +57,15 @@ package pixelshop.managers {
 		public override function init():void {
 			super.init();
 			
-			Lib.STAGE.addChildAt( _panel, 0 );
+			Lib.STAGE.addChildAt( _panel, 1 );
 			Lib.STAGE.addEventListener(Event.DEACTIVATE, onAction);
 			
-			Registry.WORKSPACE.addEventListener(MouseEvent.MOUSE_UP, onAction);
-			Registry.WORKSPACE.addEventListener(MouseEvent.MOUSE_DOWN, onAction);
-			Registry.WORKSPACE.addEventListener(MouseEvent.MOUSE_MOVE, onAction);
-			Registry.WORKSPACE.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onAction);
-			Registry.WORKSPACE.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onAction);
-			Registry.WORKSPACE.addEventListener(Event.ENTER_FRAME, onAction);
+			Registry.WORKSPACE.clickableSprite.addEventListener(MouseEvent.MOUSE_UP, onAction);
+			Registry.WORKSPACE.clickableSprite.addEventListener(MouseEvent.MOUSE_DOWN, onAction);
+			Registry.WORKSPACE.clickableSprite.addEventListener(MouseEvent.MOUSE_MOVE, onAction);
+			Registry.WORKSPACE.clickableSprite.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onAction);
+			Registry.WORKSPACE.clickableSprite.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onAction);
+			Registry.WORKSPACE.clickableSprite.addEventListener(Event.ENTER_FRAME, onAction);
 			
 			addTool( getByType(ToolPencil) );
 			addTool( getByType(ToolSelect) );
@@ -119,14 +120,17 @@ package pixelshop.managers {
 		}
 		
 		private function onAction(e:Event):void {
+			var theContent:Sprite =	Registry.WORKSPACE.content;
 			var theCanvas:GridCanvas = Registry.GRID_CANVAS;
 			
 			if (!_currentTool || !Registry.CAN_DRAW) {
 				return;
 			}
 			
-			var mouseX:Number =	theCanvas.mouseX;
-			var mouseY:Number =	theCanvas.mouseY;
+			var mouseX:int =	(Lib.STAGE.mouseX - theContent.x - Registry.WORKSPACE.x) / theContent.scaleX;
+			var mouseY:int =	(Lib.STAGE.mouseY - theContent.y - Registry.WORKSPACE.y) / theContent.scaleY;
+			
+			//trace(mouseX + " : " + mouseY);
 			
 			var edgeLimit:int =	2;
 			var isOut:Boolean = mouseX < -edgeLimit || mouseX > (theCanvas.width + edgeLimit) ||

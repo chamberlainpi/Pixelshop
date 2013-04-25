@@ -16,7 +16,12 @@ package pixelshop.tools {
 			super._mouseDown();
 			
 			var theColor:uint =	manager.isDownLMB ? manager.foregroundColor : manager.backgroundColor;
-			this.bitmap.floodFill( manager.currentX, manager.currentY, theColor );
+			Registry.LAYER_CURRENT.bitmap.floodFill( manager.currentX, manager.currentY, theColor );
+			Registry.LAYER_CURRENT.invalidate();
+			
+			
+			
+			//Registry.LAYER_DRAW.invalidate();
 		}
 	}
 }

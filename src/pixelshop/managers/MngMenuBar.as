@@ -33,7 +33,11 @@ package pixelshop.managers {
 					{label: "Save As...", func: MenuFileCommands.onFileSaveAs },
 					{label: "Recent Documents >", children: [{label: "test 123"},{label: "test 456"}]}
 				] },
-				{ label: "Edit", children: [{label: "Cut"}] },
+				{ label: "Edit", children: [
+					{label: "Undo", shortcut: "CTRL+Z", func: Registry.MAN_UNDO.undo },
+					{label: "Redo", shortcut: "CTRL+SHIFT+Z", func: Registry.MAN_UNDO.redo },
+					{label: "Cut" }
+				] },
 				{ label: "View", children: [
 					{label: "Zoom In", func: MenuViewCommands.onZoomIn},
 					{label: "Zoom Out", func: MenuViewCommands.onZoomOut},
@@ -43,10 +47,10 @@ package pixelshop.managers {
 			]);
 			
 			bar.addIcons( [
-				{ icon: "icon_happy" },
-				{ icon: "icon_neutral" },
-				{ icon: "icon_angry" },
-				{ icon: "icon_surprise" },
+				//{ icon: "icon_happy" },
+				//{ icon: "icon_neutral" },
+				//{ icon: "icon_angry" },
+				//{ icon: "icon_surprise" },
 				{ icon: "icon_grid", func: onGridClick }
 			]);
 			

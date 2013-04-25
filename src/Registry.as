@@ -6,10 +6,10 @@ package  {
 	import com.bit101.bigp.MenuBar;
 	import com.bit101.bigp.WindowModal;
 	import com.bit101.bigp.Workspace;
-	import com.genome2d.core.GConfig;
-	import com.genome2d.core.Genome2D;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import org.osflash.signals.Signal;
+	import pixelshop.AppStrings;
 	import pixelshop.GridCanvas;
 	import pixelshop.managers.Manager_Base;
 	import pixelshop.managers.MngFileIO;
@@ -20,7 +20,9 @@ package  {
 	import pixelshop.managers.MngSelection;
 	import pixelshop.managers.MngTools;
 	import pixelshop.managers.MngUndo;
-	import pixelshop.PixelLayer;
+	import starling.core.Starling;
+	import starling.extensions.bigp.BitmapImage;
+	import starling.textures.TextureAtlas;
 
 	/**
 	 * ...
@@ -39,6 +41,7 @@ package  {
 		public static var whenDrawBegin:Signal;
 		public static var whenDrawUpdate:Signal;
 		public static var whenDrawEnd:Signal;
+		public static var whenTitleInvalidated:Signal;
 		
 		public static var DEFAULT_WIDTH:int =	16;
 		public static var DEFAULT_HEIGHT:int =	16;
@@ -59,12 +62,15 @@ package  {
 		public static var MAN_SELECT:MngSelection;
 		
 		public static var DRAW_LIB:DrawLib;
-		public static var GENOME:Genome2D;
-		public static var GCONFIG:GConfig;
+		public static var STARLING:Starling;
+		public static var ATLAS:TextureAtlas;
+		public static var STR:AppStrings;
+		public static var DOC_WIDTH:int;
+		public static var DOC_HEIGHT:int;
 		
-		public static function get LAYER_DRAW():PixelLayer { return GRID_CANVAS.layerDraw; }
-		public static function get LAYER_FINAL():PixelLayer { return GRID_CANVAS.layerFinal; }
-		public static function get LAYER_CURRENT():PixelLayer { return GRID_CANVAS.layerFinal; }
+		public static function get LAYER_DRAW():BitmapImage { return GRID_CANVAS.layerDraw; }
+		public static function get LAYER_FINAL():BitmapImage { return GRID_CANVAS.layerFinal; }
+		public static function get LAYER_CURRENT():BitmapImage { return GRID_CANVAS.layerFinal; }
 		
 		public static function get CAN_DRAW():Boolean {
 			if (ColorSwatch.PANEL && ColorSwatch.PANEL.stage) {
@@ -95,6 +101,19 @@ package  {
 			_MANAGERS[_MANAGERS.length] = MAN_UNDO = new MngUndo();
 			_MANAGERS[_MANAGERS.length] = MAN_TOOLS = new MngTools();
 			_MANAGERS[_MANAGERS.length] = MAN_SELECT = new MngSelection();
+			
+			//Init SIGNALS:
+			whenResize =			new Signal();
+			whenZoom =				new Signal();
+			whenNewFile =			new Signal();
+			whenCloseFile =			new Signal();
+			whenDrawBegin =			new Signal();
+			whenDrawUpdate =		new Signal();
+			whenDrawEnd =			new Signal();
+			whenTitleInvalidated =	new Signal();
+			
+			STARLING = Starling.current;
+			STR =	new AppStrings();
 		}
 		
 		public static function initManagers():void {

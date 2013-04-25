@@ -1,16 +1,17 @@
 package  {
+	import com.bigp.preloaders.PreloaderStarling;
 
 	/**
 	 * ...
 	 * @author Pierre Chamberlain
 	 */
-	public class Preloader extends PreloaderGenome2D {
+	public class Preloader extends PreloaderStarling {
 		
 		public function Preloader() {
 			super();
 			
-			//__autoInstantiate = true;
-			//__autoAttach = true;
+			__autoAdaptResolution = true;
+			__autoResizes = true;
 			
 			startLoading();
 		}
