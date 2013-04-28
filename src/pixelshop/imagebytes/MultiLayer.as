@@ -60,7 +60,10 @@ package pixelshop.imagebytes {
 			return inst;
 		}
 		
-		public function commitCurrent():void {
+		public function commitCurrent( pBytesToCopy:PixelBytes=null, pMerge:Boolean=true ):void {
+			if (pBytesToCopy) {
+				pBytesToCopy.copyTo( _bitmapCurrent, null, pMerge ? _bitmapScratch : null );
+			}
 			inline_copyBitmapToLayer( _bitmapCurrent, currentLayerPixels );
 			BitmapUtils.inline_clear( _bitmapDraw );
 			
@@ -123,8 +126,6 @@ package pixelshop.imagebytes {
 			//THE BIGGER DIRTY WAY!
 			//////mergeToBitmapData(_bitmapFinal, _layers, false );
 			
-			//First copy the bytes of the current-layer to the CURRENT bitmap.
-			theCurrentLayer.pixels.copyTo( _bitmapCurrent );
 			
 			var hasLowers:Boolean = _currentLayerID > 0;
 			var hasUppers:Boolean = _currentLayerID < _layers.length - 1;
@@ -171,6 +172,9 @@ package pixelshop.imagebytes {
 			super._layersChanged();
 			
 			if (_lastLayer) trace("_lastLayerPixels: " + _lastLayer.referenceID + " new = " + currentLayerPixels.referenceID);
+			
+			//First copy the bytes of the current-layer to the CURRENT bitmap.
+			currentLayerPixels.pixels.copyTo( _bitmapCurrent );
 			
 			//MERGE UPPER & LOWER layers:
 			inline_sliceLayers( _layers, _layersMerged, 0, _currentLayerID );

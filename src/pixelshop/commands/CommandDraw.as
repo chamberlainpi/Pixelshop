@@ -49,8 +49,7 @@ package pixelshop.commands {
 			}
 			
 			try {
-				bytesNew.copyTo( bitmapTarget, null, Registry.BMP_SCRATCH );
-				Registry.MAN_LAYERS.multilayer.commitCurrent();
+				Registry.MAN_LAYERS.multilayer.commitCurrent( bytesNew );
 				TimerUtils.defer( Registry.RENDER_VALIDATOR.invalidate );
 			} catch (err:Error) {
 				trace("redo error: \n" + issuedStack.getStackTrace() );
@@ -65,8 +64,7 @@ package pixelshop.commands {
 			}
 			
 			try {
-				bytesOld.copyTo( bitmapTarget );
-				Registry.MAN_LAYERS.multilayer.commitCurrent();
+				Registry.MAN_LAYERS.multilayer.commitCurrent( bytesOld, false );
 				TimerUtils.defer( Registry.RENDER_VALIDATOR.invalidate );
 			} catch (err:Error) {
 				trace("undo error: \n" + issuedStack.getStackTrace() );
