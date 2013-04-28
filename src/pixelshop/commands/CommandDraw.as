@@ -1,4 +1,5 @@
 package pixelshop.commands {
+	import com.bigp.utils.TimerUtils;
 	import pixelshop.imagebytes.PixelBytes;
 	import flash.display.BitmapData;
 	import flash.geom.Point;
@@ -50,6 +51,7 @@ package pixelshop.commands {
 			try {
 				bytesNew.copyTo( bitmapTarget, null, Registry.BMP_SCRATCH );
 				Registry.MAN_LAYERS.multilayer.commitCurrent();
+				TimerUtils.defer( Registry.RENDER_VALIDATOR.invalidate );
 			} catch (err:Error) {
 				trace("redo error: \n" + issuedStack.getStackTrace() );
 			}
@@ -65,7 +67,7 @@ package pixelshop.commands {
 			try {
 				bytesOld.copyTo( bitmapTarget );
 				Registry.MAN_LAYERS.multilayer.commitCurrent();
-				Registry.RENDER_VALIDATOR.invalidate();
+				TimerUtils.defer( Registry.RENDER_VALIDATOR.invalidate );
 			} catch (err:Error) {
 				trace("undo error: \n" + issuedStack.getStackTrace() );
 			}
