@@ -19,7 +19,8 @@ package pixelshop.managers {
 		public function createPanel(pX:int, pY:int, pWidth:int, pHeight:int):void {
 			_panel = new Panel(null, pX, pY);
 			_panel.setSize( _width = pWidth, _height = pHeight );
-			
 		}
+		
+		public function get panel():Panel { return _panel; }
 	}
 }

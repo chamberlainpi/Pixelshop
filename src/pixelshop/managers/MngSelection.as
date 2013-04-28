@@ -42,9 +42,9 @@ package pixelshop.managers {
 		protected override function onNewDocument():void {
 			super.onNewDocument();
 			
-			if (!Registry.LAYER_DRAW) return;
+			if (!_selectionRect || !Registry.BMP_CURRENT) return;
 			
-			_selectionRect.setTo(0, 0, Registry.LAYER_DRAW.width, Registry.LAYER_DRAW.height); 
+			_selectionRect.setTo(0, 0, Registry.DOC_WIDTH, Registry.DOC_HEIGHT); 
 		}
 		
 		protected override function onUpdate():void {
@@ -70,6 +70,7 @@ package pixelshop.managers {
 			if (_selectionRect.width == 0) _selectionRect.width = 1;
 			if (_selectionRect.height == 0) _selectionRect.height = 1;
 			g.drawRect(int(_selectionRect.x), int(_selectionRect.y), int(_selectionRect.width), int(_selectionRect.height));
+			g.endFill();
 		}
 		
 		public function selectFrom( x0:int, y0:int, x1:int, y1:int ):void {

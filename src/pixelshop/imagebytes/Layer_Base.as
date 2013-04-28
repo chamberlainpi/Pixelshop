@@ -14,6 +14,8 @@ package pixelshop.imagebytes {
 		}
 		
 		public function init():void { }
-		public function dispose():void { name = null}
+		public function dispose():void { name = null }
+		public function selected():void { }
+		public function deselected():void { }
 	}
 }

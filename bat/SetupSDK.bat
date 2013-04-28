@@ -2,7 +2,7 @@
 
 :: Path to Flex SDK
 :: set FLEX_SDK=C:\_ENV\flex_sdks\4.6.0
-set FLEX_SDK=C:\Program Files (x86)\FlashDevelop\Tools\flexsdk
+set FLEX_SDK=C:\Program Files\FlashDevelop\Tools\flexsdk
 
 
 :validation

@@ -9,15 +9,15 @@
     <movie width="800" />
     <movie height="600" />
     <movie version="3" />
-    <movie minorVersion="6" />
+    <movie minorVersion="7" />
     <movie platform="AIR" />
     <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="..\..\..\..\_WORK\_FLASH_LIBRARIES\minimalcomps-master\src" />
-    <class path="..\..\..\..\_WORK\_PIERRE\PierreGame_Template\src_utils" />
+    <class path="..\..\_FLASH_LIBRARIES\minimalcomps-master\src" />
+    <class path="..\..\_PIERRE\PierreGame_Template\src_utils" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -57,6 +57,7 @@
     <element path="lib\blooddy_crypto.swc" />
     <element path="lib\greensock.swc" />
     <element path="lib\Starling_BigP_SWC.swc" />
+    <element path="lib\as3-signals.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

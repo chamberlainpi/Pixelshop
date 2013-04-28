@@ -1,5 +1,6 @@
 package pixelshop.managers {
 	import com.bigp.utils.StringUtils;
+	import com.bigp.utils.TimerUtils;
 
 	/**
 	 * ...
@@ -20,12 +21,13 @@ package pixelshop.managers {
 			Registry.whenZoom.add( onZoom );
 			Registry.whenNewFile.add( onNewFile );
 			Registry.whenTitleInvalidated.add( updateTitle );
-			onZoom();
 		}
 		
 		private function onNewFile():void {
-			Registry.WORKSPACE.zoom = Registry.DEFAULT_ZOOM;
 			Registry.GRID_CANVAS.setSize( Registry.DOC_WIDTH, Registry.DOC_HEIGHT );
+			Registry.WORKSPACE.zoom = Registry.DEFAULT_ZOOM;
+			Registry.RENDER_VALIDATOR.invalidate();
+			//TimerUtils.defer( Registry.invalidateLayersAndCanvas );
 			
 			updateTitle();
 		}

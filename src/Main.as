@@ -1,4 +1,4 @@
-package {
+package  {
 	import assets.Assets;
 	import bigp.mathlib.DrawLib;
 	import com.bigp.Lib;
@@ -22,7 +22,7 @@ package {
 	 */
 	public class Main extends Sprite {
 		
-		public function Main():void {
+		public function Main() {
 			PixelBytes.DONT_ALLOW_SMALL_RECTANGLES = false;
 			DrawUtils_Base.INST = new DrawUtils_Base();
 			Component.initStage( Lib.STAGE );
@@ -67,8 +67,6 @@ package {
 			Registry.WORKSPACE.content.addChild( Registry.GRID_CANVAS );
 			Registry.DOC_WIDTH = Registry.DEFAULT_WIDTH;
 			Registry.DOC_HEIGHT = Registry.DEFAULT_HEIGHT;
-			
-			
 			Registry.initManagers();
 			
 			//Bind Signal methods:

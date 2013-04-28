@@ -9,8 +9,9 @@ package pixelshop.managers {
 	public class Manager_Base {
 		
 		private var _isUpdated:Boolean = false;
+		
 		public function Manager_Base() {
-			
+			super();
 		}
 		
 		public function init():void {

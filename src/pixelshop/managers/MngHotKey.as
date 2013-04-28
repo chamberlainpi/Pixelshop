@@ -1,5 +1,6 @@
 package pixelshop.managers {
 	import com.bigp.Lib;
+	import com.bigp.utils.KeyAdvancedUtils;
 	import flash.ui.Keyboard;
 	import pixelshop.tools.ToolEraser;
 	import pixelshop.tools.ToolFill;
@@ -21,29 +22,38 @@ package pixelshop.managers {
 		public override function init():void {
 			super.init();
 			
+			var theKeys:KeyAdvancedUtils = Lib.KEYS;
+			
 			//Zoom
-			Lib.KEYS.bind([Keyboard.CONTROL, Keyboard.BACKQUOTE], onCTRLTilde);
+			theKeys.bind([Keyboard.CONTROL, Keyboard.BACKQUOTE], onCTRLTilde);
 			
 			//Selection
-			Lib.KEYS.bind([Keyboard.CONTROL, Keyboard.A], onCTRL_A);
-			Lib.KEYS.bind([Keyboard.CONTROL, Keyboard.D], onCTRL_D);
-			Lib.KEYS.bind([Keyboard.CONTROL, Keyboard.X], onCTRL_X);
-			Lib.KEYS.bind([Keyboard.CONTROL, Keyboard.C], onCTRL_C);
-			Lib.KEYS.bind([Keyboard.CONTROL, Keyboard.V], onCTRL_V);
-			Lib.KEYS.bind(Keyboard.DELETE, onDelete); //Clear
+			theKeys.bind([Keyboard.CONTROL, Keyboard.A], onCTRL_A);
+			theKeys.bind([Keyboard.CONTROL, Keyboard.D], onCTRL_D);
+			theKeys.bind([Keyboard.CONTROL, Keyboard.X], onCTRL_X);
+			theKeys.bind([Keyboard.CONTROL, Keyboard.C], onCTRL_C);
+			theKeys.bind([Keyboard.CONTROL, Keyboard.V], onCTRL_V);
+			theKeys.bind(Keyboard.DELETE, onDelete); //Clear
 			
 			// Undo
-			Lib.KEYS.bind([Keyboard.CONTROL, Keyboard.Z], onCTRL_Undo);
-			Lib.KEYS.bind([Keyboard.CONTROL, Keyboard.Z, Keyboard.SHIFT], onCTRL_Redo);
+			theKeys.bind([Keyboard.CONTROL, Keyboard.Z], onCTRL_Undo);
+			theKeys.bind([Keyboard.CONTROL, Keyboard.Z, Keyboard.SHIFT], onCTRL_Redo);
 			
 			//Tools
-			Lib.KEYS.bind(Keyboard.A, onToolSwitch, [ToolPencil]);
-			Lib.KEYS.bind(Keyboard.S, onToolSwitch, [ToolSelect]);
-			Lib.KEYS.bind(Keyboard.D, onToolSwitch, [ToolShape]);
-			Lib.KEYS.bind(Keyboard.F, onToolSwitch, [ToolFill]);
-			Lib.KEYS.bind(Keyboard.G, onToolSwitch, [ToolPicker]);
-			Lib.KEYS.bind(Keyboard.E, onToolSwitch, [ToolEraser]);
+			theKeys.bind(Keyboard.A, onToolSwitch, [ToolPencil]);
+			theKeys.bind(Keyboard.S, onToolSwitch, [ToolSelect]);
+			theKeys.bind(Keyboard.D, onToolSwitch, [ToolShape]);
+			theKeys.bind(Keyboard.F, onToolSwitch, [ToolFill]);
+			theKeys.bind(Keyboard.G, onToolSwitch, [ToolPicker]);
+			theKeys.bind(Keyboard.E, onToolSwitch, [ToolEraser]);
+			
+			//Layer
+			theKeys.bind(Keyboard.EQUAL, onLayerAdd);
+			theKeys.bind(Keyboard.MINUS, onLayerRemove);
 		}
+		
+		private function onLayerAdd():void { Registry.MAN_LAYERS.addLayer(); }
+		private function onLayerRemove():void { Registry.MAN_LAYERS.removeLayer(); }
 		
 		private function onCTRL_A():void { Registry.MAN_SELECT.selectAll(); }
 		private function onCTRL_D():void { Registry.MAN_SELECT.selectNone(); }

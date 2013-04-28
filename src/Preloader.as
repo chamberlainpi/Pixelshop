@@ -8,7 +8,7 @@ package  {
 	public class Preloader extends PreloaderStarling {
 		
 		public function Preloader() {
-			super();
+			super("Main");
 			
 			__autoAdaptResolution = true;
 			__autoResizes = true;

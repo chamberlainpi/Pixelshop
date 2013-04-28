@@ -24,7 +24,6 @@ package pixelshop.menus {
 			Registry.DOC_WIDTH =	FILE_NEW.documentWidth;
 			Registry.DOC_HEIGHT =	FILE_NEW.documentHeight;
 			
-			Registry.GRID_CANVAS.setSize( FILE_NEW.documentWidth, FILE_NEW.documentHeight );
 			FILE_NEW.close();
 			FILE_NEW = null;
 			

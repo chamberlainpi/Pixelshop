@@ -14,6 +14,7 @@ package pixelshop.commands {
 		public var bytesOld:PixelBytes;
 		public var bitmapTarget:BitmapData;
 		public var pointTarget:Point;
+		public var layerReferenceID:int = 0;
 		
 		public static var COUNTER:int = 0;
 		public var id:int = 0;
@@ -29,41 +30,45 @@ package pixelshop.commands {
 			issuedStack = new Error();
 		}
 		
-		public static function create( pTarget:BitmapData, pNewPixels:BitmapData, pNewRect:Rectangle=null ):CommandDraw {
-			var cmd:CommandDraw = new CommandDraw( Registry.LAYER_CURRENT.bitmap );
-			 
-			cmd.bytesNew = !pNewRect ? PixelBytes.getBoundsBytes( pNewPixels ) : PixelBytes.initWithBitmap( pNewPixels, pNewRect );
-			cmd.bytesOld = PixelBytes.initWithBitmap( Registry.LAYER_CURRENT.bitmap, cmd.bytesNew.rect );
+		public static function create( pTarget:BitmapData, pNewPixels:BitmapData, pNewRect:Rectangle = null ):CommandDraw {
+			if (!Registry.MAN_LAYERS.multilayer.currentLayer) return null;
 			
+			var cmd:CommandDraw = new CommandDraw( pTarget );
+			cmd.bytesNew = pNewRect ? PixelBytes.initWithBitmap( pNewPixels, pNewRect ) : PixelBytes.getBoundsBytes( pNewPixels );
+			cmd.bytesOld =			PixelBytes.initWithBitmap( pTarget, cmd.bytesNew.rect );
+			cmd.layerReferenceID =	Registry.MAN_LAYERS.multilayer.currentLayer.referenceID;
 			return cmd;
 		}
 		
 		public override function redo():void {
 			super.redo();
 			
+			if (!Registry.MAN_LAYERS.multilayer.setCurrentByRefID( this.layerReferenceID )) {
+				throw new Error("The current layer could not be changed to non-existing Reference ID: " + this.layerReferenceID);
+			}
+			
 			try {
-				//First draw to the scratch layer:
-				bytesNew.copyTo( bitmapTarget, null, Registry.LAYER_DRAW.bitmap );
+				bytesNew.copyTo( bitmapTarget, null, Registry.BMP_SCRATCH );
+				Registry.MAN_LAYERS.multilayer.commitCurrent();
 			} catch (err:Error) {
 				trace("redo error: \n" + issuedStack.getStackTrace() );
 			}
-			
-			Registry.LAYER_DRAW.invalidate();
-			Registry.LAYER_CURRENT.invalidate();
 		}
 		
 		public override function undo():void {
 			super.undo();
 			
+			if (!Registry.MAN_LAYERS.multilayer.setCurrentByRefID( this.layerReferenceID )) {
+				throw new Error("The current layer could not be changed to non-existing Reference ID: " + this.layerReferenceID);
+			}
+			
 			try {
-				//First draw to the scratch layer:
-				bytesOld.copyTo( bitmapTarget, null, Registry.LAYER_DRAW.bitmap );
+				bytesOld.copyTo( bitmapTarget );
+				Registry.MAN_LAYERS.multilayer.commitCurrent();
+				Registry.RENDER_VALIDATOR.invalidate();
 			} catch (err:Error) {
 				trace("undo error: \n" + issuedStack.getStackTrace() );
 			}
-			
-			Registry.LAYER_DRAW.invalidate();
-			Registry.LAYER_CURRENT.invalidate();
 		}
 	}
 }

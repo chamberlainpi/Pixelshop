@@ -1,4 +1,5 @@
 package  pixelshop.imagebytes {
+	import com.bigp.utils.BitmapUtils;
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -94,8 +95,10 @@ package  pixelshop.imagebytes {
 			}
 			
 			if (pMergeAlphaViaBitmap) {
+				BitmapUtils.inline_clear( pMergeAlphaViaBitmap );
 				pMergeAlphaViaBitmap.setPixels(_rectCopyTo, _bytes);
 				pBitmapData.copyPixels( pMergeAlphaViaBitmap, pMergeAlphaViaBitmap.rect, _POINT_ZERO, null, null, true );
+				BitmapUtils.inline_clear( pMergeAlphaViaBitmap );
 			} else {
 				pBitmapData.setPixels( _rectCopyTo, _bytes );
 			}

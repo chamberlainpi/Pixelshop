@@ -133,14 +133,14 @@ package pixelshop.managers {
 			//trace(mouseX + " : " + mouseY);
 			
 			var edgeLimit:int =	2;
-			var isOut:Boolean = mouseX < -edgeLimit || mouseX > (theCanvas.width + edgeLimit) ||
-								mouseY < -edgeLimit || mouseY > (theCanvas.height + edgeLimit)
+			var isOut:Boolean = mouseX < -edgeLimit || mouseX > (Registry.DOC_WIDTH + edgeLimit) ||
+								mouseY < -edgeLimit || mouseY > (Registry.DOC_HEIGHT + edgeLimit)
 			
 			//TODO Why is theCanvas.width / .height 0 : 0 ???
 			
 			
-			currentX = MathUtils.clamp(mouseX, 0, Registry.GRID_CANVAS.layerDraw.width);
-			currentY = MathUtils.clamp(mouseY, 0, Registry.GRID_CANVAS.layerDraw.height);
+			currentX = MathUtils.clamp(mouseX, 0, Registry.DOC_WIDTH);
+			currentY = MathUtils.clamp(mouseY, 0, Registry.DOC_HEIGHT);
 			
 			switch(e.type) {
 				case MouseEvent.MOUSE_DOWN:			if (isOut) return; isDownLMB = true; _currentTool.mouseDown(); break;

@@ -8,9 +8,11 @@ package  {
 	import com.bit101.bigp.Workspace;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import org.osflash.signals.PrioritySignal;
 	import org.osflash.signals.Signal;
 	import pixelshop.AppStrings;
 	import pixelshop.GridCanvas;
+	import pixelshop.Invalidator;
 	import pixelshop.managers.Manager_Base;
 	import pixelshop.managers.MngFileIO;
 	import pixelshop.managers.MngHotKey;
@@ -34,14 +36,14 @@ package  {
 		public static var MENUBAR:MenuBar;
 		public static var GRID_CANVAS:GridCanvas;
 		
-		public static var whenResize:Signal;
-		public static var whenZoom:Signal;
-		public static var whenNewFile:Signal;
-		public static var whenCloseFile:Signal;
-		public static var whenDrawBegin:Signal;
-		public static var whenDrawUpdate:Signal;
-		public static var whenDrawEnd:Signal;
-		public static var whenTitleInvalidated:Signal;
+		public static var whenResize:PrioritySignal;
+		public static var whenZoom:PrioritySignal;
+		public static var whenNewFile:PrioritySignal;
+		public static var whenCloseFile:PrioritySignal;
+		public static var whenDrawBegin:PrioritySignal;
+		public static var whenDrawUpdate:PrioritySignal;
+		public static var whenDrawEnd:PrioritySignal;
+		public static var whenTitleInvalidated:PrioritySignal;
 		
 		public static var DEFAULT_WIDTH:int =	16;
 		public static var DEFAULT_HEIGHT:int =	16;
@@ -68,52 +70,56 @@ package  {
 		public static var DOC_WIDTH:int;
 		public static var DOC_HEIGHT:int;
 		
-		public static function get LAYER_DRAW():BitmapImage { return GRID_CANVAS.layerDraw; }
-		public static function get LAYER_FINAL():BitmapImage { return GRID_CANVAS.layerFinal; }
-		public static function get LAYER_CURRENT():BitmapImage { return GRID_CANVAS.layerFinal; }
+		public static var RENDER_VALIDATOR:Invalidator;
+		
+		public static function get LAYER_FINAL():BitmapImage { return MAN_LAYERS.layerFinal; }
+		public static function get BMP_FINAL():BitmapData { return MAN_LAYERS && MAN_LAYERS.multilayer ? MAN_LAYERS.multilayer.bitmapFinal : null; }
+		public static function get BMP_DRAW():BitmapData { return MAN_LAYERS && MAN_LAYERS.multilayer ? MAN_LAYERS.multilayer.bitmapDraw : null; }
+		public static function get BMP_CURRENT():BitmapData { return MAN_LAYERS && MAN_LAYERS.multilayer ? MAN_LAYERS.multilayer.bitmapCurrent : null; }
+		public static function get BMP_SCRATCH():BitmapData { return MAN_LAYERS && MAN_LAYERS.multilayer ? MAN_LAYERS.multilayer.bitmapScratch : null; }
+		public static function get LAYER_CURRENT_ID():int { return MAN_LAYERS.multilayer.currentLayer.referenceID; }
 		
 		public static function get CAN_DRAW():Boolean {
-			if (ColorSwatch.PANEL && ColorSwatch.PANEL.stage) {
-				return false;
-			}
-			
-			if (MAN_TOOLS.recentlyChanged) {
-				return false;
-			}
+			if (ColorSwatch.PANEL && ColorSwatch.PANEL.stage) return false;
+			if (MAN_TOOLS.recentlyChanged) return false;
 			
 			SpriteUtils.getChildrenByType(Lib.STAGE, WindowModal, true, _MODAL_WINDOWS);
-			
-			if (_MODAL_WINDOWS.length > 0) {
-				return false;
-			}
+			if (_MODAL_WINDOWS.length > 0) return false;
 			
 			return true;
 		}
 		
 		public static function instantiate():void {
-			_MANAGERS =	new Vector.<Manager_Base>();
-			
-			_MANAGERS[_MANAGERS.length] = MAN_HOTKEYS = new MngHotKey();
-			_MANAGERS[_MANAGERS.length] = MAN_FILE = new MngFileIO();
-			_MANAGERS[_MANAGERS.length] = MAN_MENUBAR = new MngMenuBar();
-			_MANAGERS[_MANAGERS.length] = MAN_LAYOUT = new MngLayout();
-			_MANAGERS[_MANAGERS.length] = MAN_LAYERS = new MngLayers();
-			_MANAGERS[_MANAGERS.length] = MAN_UNDO = new MngUndo();
-			_MANAGERS[_MANAGERS.length] = MAN_TOOLS = new MngTools();
-			_MANAGERS[_MANAGERS.length] = MAN_SELECT = new MngSelection();
+			_MANAGERS =	new <Manager_Base>[
+				MAN_HOTKEYS = new MngHotKey(),
+				MAN_FILE = new MngFileIO(),
+				MAN_MENUBAR = new MngMenuBar(),
+				MAN_LAYOUT = new MngLayout(),
+				MAN_LAYERS = new MngLayers(),
+				MAN_UNDO = new MngUndo(),
+				MAN_TOOLS = new MngTools(),
+				MAN_SELECT = new MngSelection()
+			];
 			
 			//Init SIGNALS:
-			whenResize =			new Signal();
-			whenZoom =				new Signal();
-			whenNewFile =			new Signal();
-			whenCloseFile =			new Signal();
-			whenDrawBegin =			new Signal();
-			whenDrawUpdate =		new Signal();
-			whenDrawEnd =			new Signal();
-			whenTitleInvalidated =	new Signal();
+			whenResize =			new PrioritySignal();
+			whenZoom =				new PrioritySignal();
+			whenNewFile =			new PrioritySignal();
+			whenCloseFile =			new PrioritySignal();
+			whenDrawBegin =			new PrioritySignal();
+			whenDrawUpdate =		new PrioritySignal();
+			whenDrawEnd =			new PrioritySignal();
+			whenTitleInvalidated =	new PrioritySignal();
+			
+			RENDER_VALIDATOR =		new Invalidator(whenDrawBegin, _validateRenders);
 			
 			STARLING = Starling.current;
 			STR =	new AppStrings();
+		}
+		
+		private static function _validateRenders():void {
+			MAN_LAYERS.multilayer.invalidator.invalidate();		//Invalidation (Mostly to update the drawing layer
+			MAN_LAYERS.layerFinal.invalidate();		//Invalidation for the final-bitmapdata to commit to GPU
 		}
 		
 		public static function initManagers():void {

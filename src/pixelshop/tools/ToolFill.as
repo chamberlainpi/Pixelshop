@@ -16,9 +16,9 @@ package pixelshop.tools {
 			super._mouseDown();
 			
 			var theColor:uint =	manager.isDownLMB ? manager.foregroundColor : manager.backgroundColor;
-			Registry.LAYER_CURRENT.bitmap.floodFill( manager.currentX, manager.currentY, theColor );
-			Registry.LAYER_CURRENT.invalidate();
-			
+			Registry.BMP_CURRENT.floodFill( manager.currentX, manager.currentY, theColor );
+			Registry.MAN_LAYERS.multilayer.commitCurrent();
+			///////// TODO OMG OMG REALLY AGAIN???
 			
 			
 			//Registry.LAYER_DRAW.invalidate();
